@@ -13,20 +13,29 @@ def show_help():
 Enter 'DONE' to stop adding items.
 Enter 'HELP' for this help message.
 Enter 'SHOW' to see your current list.
+Enter 'REMOVE' to delete an item from the list.
 """)
 
 
 def add_to_list(item):
 	show_list()
-	if len(show_list):
+	if len(shopping_list):
 		position = raw_input("Where should I add {}?\n"
 							 "Press ENTER to add to the end of the list\n"
 							 "> ".format(item))
 	else:
-		
+		position = 0
 
-	shopping_list.append(item)
-	print("Added! List has {} items.".format(len(shopping_list)))
+	try:
+		position = abs(int(position))
+	except ValueError:
+		position = None
+	if position is not None:
+		shopping_list.insert(position-1,  item)
+	else:
+		shopping_list.append(new_item)
+
+	show_list()
 
 
 def show_list():
@@ -37,10 +46,21 @@ def show_list():
 	for item in shopping_list:
 		print("{}. {}".format(index, item))
 		index += 1
-		print("-"*10)
+
+	print("-"*10)
+
+
+	def remove_from_list():
+		show_list()
+		what_to_remove = raw_input("What would you like to remove?\n> ")
+		try:
+			shopping_list.remove(what_to_remove)
+		except ValueError:
+			pass
+		show_list()	
 
 show_help()
-#infinite loop
+
 while True: 
 	new_item = raw_input("> ")
 
@@ -52,7 +72,9 @@ while True:
 	elif new_item.upper() == 'SHOW':
 		show_list()
 		continue
+	elif new_item.upper() == 'REMOVE':
+		remove_from_list()
 	else:
-	add_to_list(new_item)
+		add_to_list(new_item)
 
 show_list()
